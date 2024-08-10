@@ -9,11 +9,12 @@
             background-color: #FFEBEB;
             font-family: "微软雅黑", sans-serif;
             text-align: center;
-            padding-top: 50px;
+            margin: 0;
+            padding: 0;
         }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 90%;
+            margin: 20px auto;
             background-color: #F5FFFA;
             padding: 20px;
             border-radius: 10px;
@@ -24,12 +25,11 @@
             color: #FF69B4;
             border: 2px dashed #FFB6C1;
             border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin: 20px auto;
             font-size: 18px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto 20px;
+            max-width: 90%;
         }
         .notice strong {
             font-size: 20px;
@@ -38,19 +38,95 @@
         button {
             background-color: #FFB6C1;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             margin: 10px;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             border-radius: 5px;
+            display: inline-block;
+            line-height: 1.5;
         }
         input {
-            padding: 10px;
-            width: 80%;
+            padding: 12px;
+            width: 90%;
             margin-top: 10px;
-            font-size: 16px;
+            font-size: 18px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #FFEBEB;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+            input {
+                padding: 10px;
+                font-size: 16px;
+            }
+            .modal-content {
+                width: 95%;
+            }
+            .close {
+                font-size: 24px;
+            }
+        }
+        @media (max-width: 480px) {
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            input {
+                padding: 8px;
+                font-size: 14px;
+            }
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            .close {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -63,17 +139,24 @@
 
 <div class="container">
     <h2>🌸 您好~请输入今天的日期吧 🌸</h2>
-    <input type="text" id="dateInput" placeholder="例如：8.9">
+    <input type="text" id="dateInput" placeholder="例如：8.10">
     <button onclick="checkDate()">确认</button>
 </div>
 
 <div class="container" id="menuContainer" style="display:none;">
     <h2> 💖 七夕节快乐 亲爱的邓小姐~ 💖</h2>
-    <button onclick="openPopup('今日天气', '大理今日阴天间小雨，17-25度，出门活动时记得带伞哦 🌧️')">🌤️ 今日天气</button>
-    <button onclick="openPopup('今日运势', '今天适合放松心情，快去看白蛇！ 💕')">💫 今日运势</button>
+    <button onclick="showMessage('大理今日阴天间小雨，17-25度，出门活动时记得带伞哦 🌧️')">🌤️ 今日天气</button>
+    <button onclick="showMessage('今天适合放松心情，快去看白蛇！ 💕')">💫 今日运势</button>
     <button onclick="window.open('https://wp.m.163.com/163/html/newsapp/paris-olympic-medals/home.html?i=0&a=0&spss=oppoClient')">🏅 每日奥运</button>
-    <button onclick="openPopup('每日名言', '没别的意思，就是借着特殊日子，说声喜欢你 💖')">📜 每日名言</button>
+    <button onclick="showMessage('没别的意思，就是借着特殊日子，说声喜欢你 💖')">📜 每日名言</button>
     <button onclick="confirmExit()">👋 退出</button>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modalText"></div>
+    </div>
 </div>
 
 <script>
@@ -83,46 +166,18 @@
             document.querySelector('.container').style.display = 'none';
             document.getElementById('menuContainer').style.display = 'block';
         } else {
-            openPopup('日期错误', '哎呀，日期输入不对哦！请重新输入吧。');
+            showMessage('哎呀，日期输入不对哦！请重新输入吧。');
+            document.getElementById('dateInput').focus();
         }
     }
 
-    function openPopup(title, message) {
-        const popupWidth = 500;
-        const popupHeight = 400;
-        const leftPosition = (window.screen.width / 2) - (popupWidth / 2);
-        const topPosition = (window.screen.height / 2) - (popupHeight / 2);
+    function showMessage(message) {
+        document.getElementById('modalText').textContent = message;
+        document.getElementById('myModal').style.display = "block";
+    }
 
-        const popupWindow = window.open('', '_blank', `width=${popupWidth},height=${popupHeight},resizable=yes,scrollbars=no,status=no,toolbar=no,location=no,menubar=no,top=${topPosition},left=${leftPosition}`);
-        
-        const popupContent = `
-            <html>
-            <head>
-                <style>
-                    body {
-                        background-color: #FFEBEB;
-                        font-family: "微软雅黑", sans-serif;
-                        padding: 20px;
-                        text-align: center;
-                        border-radius: 10px;
-                    }
-                    h2 {
-                        color: #FF69B4;
-                    }
-                    p {
-                        font-size: 16px;
-                        color: #333;
-                    }
-                </style>
-            </head>
-            <body>
-                <h2>${title}</h2>
-                <p>${message}</p>
-            </body>
-            </html>`;
-        
-        popupWindow.document.write(popupContent);
-        popupWindow.document.close();
+    function closeModal() {
+        document.getElementById('myModal').style.display = "none";
     }
 
     function confirmExit() {
