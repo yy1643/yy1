@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杪杪の甜蜜早安</title>
+    <style>
+        body {
+            background-color: #FFEBEB;
+            font-family: "微软雅黑", sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #F5FFFA;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .notice {
+            background-color: #FFF0F5;
+            color: #FF69B4;
+            border: 2px dashed #FFB6C1;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        .notice strong {
+            font-size: 20px;
+            color: #FF1493;
+        }
+        button {
+            background-color: #FFB6C1;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="notice">
+    <strong>✨ 小提示 ✨</strong><br>
+    今天有 <strong>QA</strong> 内容，请注意查收哦~ 🌸
+</div>
+
+<div class="container">
+    <h2>🌸 您好~请输入今天的日期吧 🌸</h2>
+    <input type="text" id="dateInput" placeholder="例如：8.9">
+    <button onclick="checkDate()">确认</button>
+</div>
+
+<div class="container" id="menuContainer" style="display:none;">
+    <h2> 💖 七夕节快乐 亲爱的邓小姐~ 💖</h2>
+    <button onclick="openPopup('今日天气', '大理今日阴天间小雨，17-25度，出门活动时记得带伞哦 🌧️')">🌤️ 今日天气</button>
+    <button onclick="openPopup('今日运势', '今天适合放松心情，快去看白蛇！ 💕')">💫 今日运势</button>
+    <button onclick="window.open('https://wp.m.163.com/163/html/newsapp/paris-olympic-medals/home.html?i=0&a=0&spss=oppoClient')">🏅 每日奥运</button>
+    <button onclick="openPopup('每日名言', '没别的意思，就是借着特殊日子，说声喜欢你 💖')">📜 每日名言</button>
+    <button onclick="confirmExit()">👋 退出</button>
+</div>
+
+<script>
+    function checkDate() {
+        const inputDate = document.getElementById('dateInput').value;
+        if (inputDate === "8.10") {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('menuContainer').style.display = 'block';
+        } else {
+            openPopup('日期错误', '哎呀，日期输入不对哦！请重新输入吧。');
+        }
+    }
+
+    function openPopup(title, message) {
+        const popupWidth = 500;
+        const popupHeight = 400;
+        const leftPosition = (window.screen.width / 2) - (popupWidth / 2);
+        const topPosition = (window.screen.height / 2) - (popupHeight / 2);
+
+        const popupWindow = window.open('', '_blank', `width=${popupWidth},height=${popupHeight},resizable=yes,scrollbars=no,status=no,toolbar=no,location=no,menubar=no,top=${topPosition},left=${leftPosition}`);
+        
+        const popupContent = `
+            <html>
+            <head>
+                <style>
+                    body {
+                        background-color: #FFEBEB;
+                        font-family: "微软雅黑", sans-serif;
+                        padding: 20px;
+                        text-align: center;
+                        border-radius: 10px;
+                    }
+                    h2 {
+                        color: #FF69B4;
+                    }
+                    p {
+                        font-size: 16px;
+                        color: #333;
+                    }
+                </style>
+            </head>
+            <body>
+                <h2>${title}</h2>
+                <p>${message}</p>
+            </body>
+            </html>`;
+        
+        popupWindow.document.write(popupContent);
+        popupWindow.document.close();
+    }
+
+    function confirmExit() {
+        const firstResponse = confirm("回答一个问题再走！");
+        if (!firstResponse) {
+            alert("不准走");
+            window.history.back();
+        } else {
+            const secondResponse = prompt("请问邓小姐是否愿意让杪杪出现在你的生活当中？\n\n请输入“是”或“否”");
+            if (secondResponse === "是") {
+                alert("开心！");
+            } else if (secondResponse === "否") {
+                alert("让我伤心一会儿");
+            } else {
+                alert("无效的选择，请重试。");
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
